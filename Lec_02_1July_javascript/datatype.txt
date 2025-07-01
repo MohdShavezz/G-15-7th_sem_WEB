@@ -1,0 +1,18 @@
+Primitive: String, Number, Boolean, Null, Undefined, Symbol, BigInt
+Non-Primitive: Objects (including Arrays and Functions)
+
+Task:
+formData:{
+username:String,
+email:String,
+phone:{
+  phoneNumber:String,
+  countryCode: String
+},
+isActive:Boolean,
+Hobbies:[String]
+Address:{
+  street: String,
+  cityCode:String
+}
+}
