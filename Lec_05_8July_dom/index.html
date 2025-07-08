@@ -1,0 +1,162 @@
+                            <!DOCTYPE html>
+                            <html lang="en">
+                            <head>
+                              <meta charset="UTF-8">
+                              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                              <title>Document</title>
+                              <style>
+                                #red{
+                                  color: red;
+                                }
+                              </style>
+                            </head>
+                            <body>
+                              <div>
+                                <p onmouseenter="paraFn(this)">
+                                  this is paragraph
+                                </p>
+                              </div>
+
+                              <!-- event delegation -->
+                              <ul id="parent">
+                                <li>one</li>
+                                <li>two</li>
+                                <li>three</li>
+                              </ul>
+                              <!-- event propgation -->
+                              
+                              <div id="outer" style="background: red;height: 5rem;">
+                                outer
+                                <div id="middle" style="height: 3rem;width: 60%;margin: auto;background-color: beige;">
+                                  middle
+                                  <div id="inner" style="background-color: aqua;width: 30%;margin: auto;">
+                                    inner
+                                  </div>
+                                </div>
+                              </div>
+                              <br>
+
+                              <!-- SUM  -->
+                               <div id="calculate">
+                                <input type="text" placeholder="enter num1:">
+                                <input type="text" placeholder="enter num2:" >
+                                <button id="btnSum">sum</button>
+                                <p id="output"></p>
+                               </div>           
+                               
+                               <!-- HOVER  -->
+                                <div>
+
+                                  <span>data</span>
+                                </div>
+
+                                <br><br>
+
+                                <!-- debouncing eg -->
+                               Search Fruits:
+                               <input id="search" type="text">
+                               <ul id="resultList">
+                                <!-- <li>apple</li>
+                                <li>apple shake</li>
+                                <li>banana shake</li>
+                                <li>banana </li>
+                                <li>graphes</li>
+                                <li>pineapple</li> -->
+                               </ul>
+                               
+
+                              <script>
+
+
+                                // debouncing
+                                function debounce(func,delay){
+                                  let time;
+                                  return function(...arg){
+                                    clearTimeout(time)
+                                    time=setTimeout(()=>func.apply(this,arg),delay)
+                                  }
+                                }
+
+                                let searchData=['apple shake','apple','banana','banana shake','graphes','pineapple']
+
+                                function handleSearch(e){
+                                  let resultList=document.getElementById('resultList')
+                                  resultList.innerText=''
+                                  let dummy=[]
+                                  let input=e.target.value.toLowerCase()
+                                  
+                                  console.log(input)
+                                  for (let i of searchData) {
+                                    if(i.includes(input)){
+                                      dummy.push(i)
+                                    }
+                                  }
+
+                                  for (let data of dummy) {
+                                    let li=document.createElement('li')
+                                    li.innerText=data
+                                    resultList.appendChild(li)
+                                  }
+                                  
+                                }
+                                let debSearch=debounce(handleSearch,1000)
+                                document.getElementById('search').addEventListener('input',debSearch)
+
+                                // HOVER effect 
+                                document.addEventListener('mouseover',()=>{
+                                  let span=document.querySelector('span')
+                                  span.textContent='loading..'
+                                  span.setAttribute('id','red')
+                                  setTimeout(() => {
+                                    span.removeAttribute('id')
+                                    span.textContent='data'
+
+                                  }, 1000);
+                                })
+
+                                // SUM nums
+                                function sumFn(){
+                                  let outputPara=document.getElementById('output')
+                                  outputPara.innerHTML=''
+                                  let sum=0
+                                  let calculate= document.querySelectorAll('#calculate input')
+                                  for(let i of calculate){
+                                    sum+=Number(i.value)
+                                  }
+                                  outputPara.style.color='red'
+                                  outputPara.style.display='inline'
+                                  outputPara.classList.add('classname')
+                                  outputPara.innerText="output is: "+sum
+                                }
+                                document.getElementById('btnSum').addEventListener('click',()=>{
+                                  sumFn()
+                                })
+
+
+                                // event propogation
+                                document.getElementById('outer').addEventListener('click',()=>{
+                                  console.log('outer clicked')
+                                },true)
+                                document.getElementById('middle').addEventListener('click',()=>{
+                                  console.log('middle clicked')
+                                },true)
+                                document.getElementById('inner').addEventListener('click',()=>{
+                                  console.log('inner clicked')
+                                },true)
+                                
+
+                                // event delegation
+                                let ul=document.querySelector('#parent')
+                                ul.addEventListener('click',(e)=>{
+                                  console.log(e.target.innerHTML)
+                                })
+
+                                // console.log(window.navigator)
+                                // window.onload(alert('load call..'))
+                                function paraFn(e){
+                                  e.style.color='red'
+                                  e.innerHTML='changed'
+                                }
+                              </script>
+                            </body>
+                            </html>
