@@ -1,0 +1,38 @@
+Assignment Title: Interactive User List App (DOM + Async Programming)
+
+Objective:
+Understand and apply DOM manipulation techniques.
+Work with asynchronous operations using fetch, Promises, and async/await.
+Build a small application that interacts with an external API.
+
+Assignment Requirements:
+Part 1: Setup the UI
+Create an HTML page with the following structure:
+An input field to enter a user ID.
+A button labeled "Get User".
+A section to display the user’s data:
+
+Name
+Email
+Phone
+Website
+A loading indicator (like "Loading...").
+Add basic styling using CSS.
+
+Part 2: DOM Manipulation
+Use JavaScript to:
+Add event listeners to the button.
+Validate the user ID input (must be a number between 1 and 10).
+Show/hide the loading indicator.
+Display fetched user data dynamically on the page.
+
+Part 3: Async Programming
+Fetch user data from this fake API:
+https://jsonplaceholder.typicode.com/users/{id}
+Use both:
+
+Part 4: Bonus (Optional)
+Add a button: "Show All Users"
+Fetch and display all users in a list (using https://jsonplaceholder.typicode.com/users)
+Use setTimeout() to simulate a delay of 2 seconds before showing the data.
+

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  Async Programming
+</body>
+
+<script>
+
+  // console.log(1)
+  // console.log(2)
+  // console.log(3)
+
+  // console.log(1)
+  // setTimeout(() => {
+  //   console.log(2)                            
+  // }, 1000)
+  // console.log(3)
+
+  // console.log('first')
+  // for(let i=0;i<1000;i++){
+  //   console.log(i)
+  // }
+  // console.log('last')
+
+  //callback hell                          
+  // setTimeout(() => {
+  //   console.log(1)   
+  //    setTimeout(() => {
+  //   console.log(2)                             
+  //   setTimeout(() => {
+  //   console.log(3)                            
+  // }, 1000);
+  // }, 3000);                         
+  // }, 2000);
+
+
+  //Callback
+  // function greet(name,callback){
+  //   console.log('hi ',name)
+  //   callback()
+  // }
+  // function sayHi(){
+  //   console.log('sayHi called')
+  // }
+  // greet('john',sayHi)
+
+  //Promises
+  // let status=0
+  // let p = new Promise((res,rej)=>{
+  //   if(status){
+  //     res('promise resolved.')
+  //   }else{
+  //     rej('promise rejected.')
+  //   }
+  // })
+
+  // p.then((data)=>{
+  //   console.log(data)
+  // }).catch(err=>console.log(err))
+
+  // const fetchData=()=>{
+  //   return new Promise((resolve,reject)=>{
+  //     const success=0 
+  //     setTimeout(() => {
+  //       if(success) resolve('data fetched.')
+  //       else reject('data rejectd.')
+  //     }, 1000);
+  //   })
+  // }
+  // fetchData()
+  // .then(data=>console.log(data))
+  // .catch(data=>console.log(data))
+
+
+  //promise chaining
+  // const stepOne=()=>{
+  //   return new Promise((res,rej)=>{
+  //     setTimeout(() => {
+  //       res('step one exec.')
+  //     }, 1000);
+  //   })
+  // }
+  // const stepTwo=()=>{
+  //   return new Promise((res,rej)=>{
+  //     setTimeout(() => {
+  //       res('step two exec.')
+  //     }, 1000);
+  //   })
+  // }
+
+  // stepOne()
+  // .then(data=>{
+  //   console.log(data)
+  //   return stepTwo()
+  // })
+  // .then(res=>{
+  //   console.log(res)
+  // })
+  // .catch(data=>console.log(data))
+
+  // using then catch
+  // fetch('https://jsonplaceholder.typicode.com/users/1')
+  // .then(data=>data.json())
+  // .then(json=>console.log(json))
+
+  // using async await
+  (async () => {
+    try {
+      let res = await fetch('https://jsonplaceholder.typicode.com/users/1')
+      let json = await res.json()
+      console.log(json)
+    } catch (error) {
+      console.log(error)
+    }
+  })()
+
+
+</script>
+
+</html>
