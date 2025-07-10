@@ -1,0 +1,13 @@
+.box {
+  max-width: 400px;
+  margin: auto;
+}
+
+input, button {
+  width: 100%;
+  margin: 5px 0;
+}
+
+#loading {
+  display: none;
+}

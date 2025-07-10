@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>User Info App</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="box">
+    <h2>Fetch User Details</h2>
+    <input type="number" id="userId" placeholder="User ID (1-10)" min="1" max="10" />
+    <button id="getUserAsyncBtn">Fetch User</button>
+    <button id="getAllUsersBtn">Get All Users</button>
+    
+    <p id="loading">Loading...</p>
+    
+    <div id="userInfo"></div>
+    <ul id="userList"></ul>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
