@@ -1,0 +1,146 @@
+mongodb community server 
+mongodb shell ( tools )
+compass
+
+C:\Windows\System32\cmd.exe   -->mongosh enter
+
+show dbs
+show collections
+use db
+db.createCollection("student") //Optional, automatic on insert
+db.dropDatabase()
+db.students.drop(); //drop collection
+db.stats()	
+db.students.stats()	
+db.students.countDocuments()	
+db.students.find().pretty()
+exit
+
+db.students.insertOne({
+  name: "John",
+  age: 22,
+  course: "Computer Science"
+});
+
+db.students.insertMany([
+  { name: "John", age: 22, course: "CS", grade: "A", active: true },
+  { name: "Sara", age: 24, course: "Math", grade: "B", active: false },
+  { name: "Ali", age: 20, course: "Physics", grade: "A", active: true },
+  { name: "Ravi", age: 23, course: "CS", grade: "C", active: true },
+  { name: "Amina", age: 25, course: "Math", grade: "B", active: false }
+]);
+
+
+//TYPES
+db.students.insertOne({
+  name: "John",                       // String
+  age: 25,                                   // Number (int)
+  isActive: true,                            // Boolean
+  enrolledDate: new Date(),      // Date
+  hobbies: ["coding", "travel", "music"],    // Array
+  address: {                                 // Embedded Object
+    city: "Chandigarh",
+    country: "India",
+    pincode: 226001
+  },
+  grade: null,                               // Null
+  marks: [                                   // Array of objects
+    { subject: "Math", score: 8.5 },
+    { subject: "Science", score: 9.0 }
+  ],
+  phone: NumberLong("9876543210"),  	     // Long
+});
+
+
+//FIND
+db.students.find(); // all docs
+db.students.find({ age: 22 }); // filter
+db.students.countDocuments({ age: 22 }); // count
+db.students.find({ age: { $gt: 21 } }); // greater than
+db.students.find({}, { name: 1, _id: 0 }); // projection
+
+db.students.find({ course: { $eq: "CS" } });
+db.students.find({ course: { $ne: "Math" } });
+db.students.find({ age: { $gt: 22 } });
+db.students.find({ age: { $gte: 23 } });
+db.students.find({ age: { $lt: 23 } });
+db.students.find({ age: { $lte: 22 } });
+db.students.find({ grade: { $in: ["A", "B"] } });
+db.students.find({ grade: { $nin: ["B"] } });
+db.students.find({ course: "CS", age: { $gt: 22 } }); 
+db.students.find({
+  $and: [
+    { course: "CS" },
+    { age: { $gt: 22 } }
+  ]
+});
+db.students.find({
+  $or: [
+    { course: "CS" },
+    { grade: "A" }
+  ]
+});
+// Find students who have the 'grade' field
+db.students.find({ grade: { $exists: true } });
+// Remove the 'grade' field from Shavez doc
+db.students.updateOne(
+  { name: "Shavez" },
+  { $unset: { grade: "" } }
+);
+// Remove 'address' from all docs
+db.students.updateMany(
+  {},
+  { $unset: { address: "" } }
+);
+
+//SORT LIMIT
+db.students.find().sort({ age: 1 });    // Ascending
+db.students.find().sort({ age: -1 });   // Descending
+db.students.find().limit(5);            // Limit results
+db.students.find().skip(5);            // Skip results
+
+//UPDATE
+db.students.updateOne({ name: "John" }, { $set: { age: 23 } });
+db.students.updateMany({ course: "Math" }, { $set: { active: true } });
+
+//DELETE
+db.students.deleteOne({ name: "Ali" });
+db.students.deleteMany({ course: "Physics" });
+
+
+//INDEX
+db.students.createIndex({ name: 1 }); //generates name: name_1 
+db.students.dropIndex("name_1")
+db.students.createIndex(
+  { name: 1 }, // this name is field
+  { name: "custom_name_index" } 
+);
+//linear search, docsExamine 5->1(after indexed)
+db.students.find({ course: "CS" }).explain("executionStats");
+
+
+
+//EXERCISE
+1. Find all students older than 22:
+db.students.find({ age: { $gt: 22 } });
+2. Find all active CS students:
+db.students.find({ course: "CS", active: true });
+3. Sort students by name descending:
+db.students.find().sort({ name: -1 });
+4. Count students in Math course:
+db.students.countDocuments({ course: "Math" });
+5. Update Ravi's grade to "B":
+db.students.updateOne({ name: "Ravi" }, { $set: { grade: "B" } });
+6.  Delete all inactive students:
+db.students.deleteMany({ active: false });
+7. Get only name and course of all students:
+db.students.find({}, { name: 1, course: 1, _id: 0 });
+
+
+
+
+
+
+
+
+
