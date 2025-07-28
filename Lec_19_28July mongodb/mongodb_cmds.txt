@@ -1,0 +1,265 @@
+db.orders.insertMany([
+  {
+    customerId: 101,
+    items: [
+      { productId: "p1", qty: 2, price: 100 },
+      { productId: "p2", qty: 1, price: 200 }
+    ],
+    status: "delivered",
+    orderDate: ISODate("2024-07-20T12:00:00Z"),
+    deliveryDate: ISODate("2024-07-25T12:00:00Z")
+  },
+  {
+    customerId: 102,
+    items: [
+      { productId: "p2", qty: 3, price: 200 },
+      { productId: "p3", qty: 1, price: 300 }
+    ],
+    status: "pending",
+    orderDate: ISODate("2024-07-22T14:30:00Z"),
+    deliveryDate: null
+  },
+  {
+    customerId: 103,
+    items: [
+      { productId: "p1", qty: 1, price: 100 },
+      { productId: "p4", qty: 2, price: 400 }
+    ],
+    status: "delivered",
+    orderDate: ISODate("2024-07-18T10:15:00Z"),
+    deliveryDate: ISODate("2024-07-22T11:45:00Z")
+  },
+  {
+    customerId: 104,
+    items: [
+      { productId: "p5", qty: 5, price: 150 }
+    ],
+    status: "cancelled",
+    orderDate: ISODate("2024-07-10T08:00:00Z"),
+    deliveryDate: null
+  },
+  {
+    customerId: 101,
+    items: [
+      { productId: "p3", qty: 2, price: 300 },
+      { productId: "p4", qty: 1, price: 400 }
+    ],
+    status: "delivered",
+    orderDate: ISODate("2024-07-15T09:20:00Z"),
+    deliveryDate: ISODate("2024-07-20T10:00:00Z")
+  },
+  {
+    customerId: 105,
+    items: [
+      { productId: "p6", qty: 1, price: 600 },
+      { productId: "p1", qty: 2, price: 100 }
+    ],
+    status: "delivered",
+    orderDate: ISODate("2024-07-05T13:10:00Z"),
+    deliveryDate: ISODate("2024-07-10T15:00:00Z")
+  }
+])
+====================================================
+
+1. Find orders where status is "delivered"
+db.orders.aggregate([
+  { $match: { status: "delivered" } }
+])
+
+2. Count total delivered orders
+db.orders.aggregate([
+  { $match: { status: "delivered" } },
+  { $count: "totalDelivered" }
+])
+
+3. Total revenue from all orders
+db.orders.aggregate([
+  { $unwind: "$items" },
+  { $group: {
+    _id: null,
+    totalRevenue: { $sum: { $multiply: ["$items.qty", "$items.price"] } }
+  }}
+])
+
+4. Group orders by customer
+db.orders.aggregate([
+  { $group: {
+    _id: "$customerId",
+    totalOrders: { $sum: 1 }
+  }}
+])
+
+5. Get top 3 recent orders
+db.orders.aggregate([
+  { $sort: { orderDate: -1 } },
+  { $limit: 3 }
+])
+
+6. Get orders in July 2024
+db.orders.aggregate([
+  { $match: {
+    orderDate: {
+      $gte: ISODate("2024-07-01"),
+      $lt: ISODate("2024-08-01")
+    }
+  }}
+])
+
+7. Project only customerId and status
+db.orders.aggregate([
+  { $project: { customerId: 1, status: 1, _id: 0 } }
+])
+
+8. Add delivery time in days
+db.orders.aggregate([
+  {
+    $addFields: {
+      deliveryTimeDays: {
+        $divide: [
+          { $subtract: ["$deliveryDate", "$orderDate"] },
+          1000 * 60 * 60 * 24
+        ]
+      }
+    }
+  }
+])
+
+9. Get most ordered product
+db.orders.aggregate([
+  { $unwind: "$items" },
+  { $group: {
+    _id: "$items.productId",
+    totalQty: { $sum: "$items.qty" }
+  }},
+  { $sort: { totalQty: -1 } },
+  { $limit: 1 }
+])
+
+10. Count of each product ordered
+db.orders.aggregate([
+  { $unwind: "$items" },
+  { $group: {
+    _id: "$items.productId",
+    totalOrdered: { $sum: "$items.qty" }
+  }}
+])
+
+11. Calculate order total for each order
+db.orders.aggregate([
+  { $unwind: "$items" },
+  { $group: {
+    _id: "$_id",
+    orderTotal: { $sum: { $multiply: ["$items.qty", "$items.price"] } }
+  }}
+])
+
+12. Remove status field from documents
+db.orders.aggregate([
+  { $unset: "status" }
+])
+
+13.  Rename customerId to clientId
+db.orders.aggregate([
+  {
+    $project: {
+      clientId: "$customerId",
+      orderDate: 1,
+      status: 1
+    }
+  }
+])
+
+14. Split items array into documents
+db.orders.aggregate([
+  { $unwind: "$items" }
+])
+
+15. Sort products by popularity
+db.orders.aggregate([
+  { $unwind: "$items" },
+  { $sortByCount: "$items.productId" }
+])
+
+//sortBycount:short hand
+{
+  $group: {
+    _id: "$items.productId",
+    count: { $sum: 1 }
+  }
+},
+{ $sort: { count: -1 } }
+
+
+//$$ROOT refers to the entire original document 
+db.orders.aggregate([
+  {
+    $group: {
+      _id: "$customerId",
+      orders: { $push: "$$ROOT" }
+    }
+  }
+])
+
+
+//$push $addToSet: 
+db.orders.aggregate([
+  { $unwind: "$items" },
+  {
+    $group: {
+      _id: "$customerId",
+      allProducts: { $push: "$items.productId" } //duplicates allowed
+      //OR uniqueProducts: { $addToSet: "$items.productId" }
+    }
+  }
+])
+
+
+//LOOKUP
+db.customers.insertMany([
+  { _id: 1, cname: "Alice" },
+  { _id: 2, cname: "Bob" },
+  { _id: 3, cname: "Charlie" },
+  { _id: 4, cname: "Diana" }
+]);
+db.products.insertMany([
+  { _id: 101, pname: "Laptop", cid: 1 },
+  { _id: 102, pname: "Phone", cid: 2 },
+  { _id: 103, pname: "Tablet", cid: 1 },
+  { _id: 104, pname: "Camera", cid: 3 }
+]);
+
+//LEFTJOIN & INNERJOIN
+[
+  {$lookup: {
+    from: "products",
+    localField: "_id",
+    foreignField: "cid",
+    as: "result"
+  }},{
+    $match: {
+      "result":{$ne:[]}
+    }
+  }
+]
+//RIGHTJOIN=!LEFTJOIN
+[
+  {
+    $lookup: {
+      from: "customers",
+      localField: "cid",
+      foreignField: "_id",
+      as: "result"
+    }
+  },
+  {
+    $project: {
+      pname: 1,
+      cid: {
+        $arrayElemAt: ["$result._id", 0]
+      },
+      cname: { $first: "$result.cname" }
+    }
+  }
+]
+//OR
+ {$unwind: "$customer"},{$project: {pname: 1,"customer.cname": 1}}
