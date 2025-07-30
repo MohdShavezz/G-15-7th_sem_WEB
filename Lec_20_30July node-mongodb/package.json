@@ -1,0 +1,25 @@
+{
+  "name": "g-16-7th_sem_web",
+  "version": "1.0.0",
+  "main": "Lec_10_14July react.js",
+  "scripts": {
+    "start": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MohdShavezz/G-16-7th_sem_WEB.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MohdShavezz/G-16-7th_sem_WEB/issues"
+  },
+  "homepage": "https://github.com/MohdShavezz/G-16-7th_sem_WEB#readme",
+  "description": "",
+  "dependencies": {
+    "mongodb": "^6.18.0",
+    "nodemon": "^3.1.10"
+  }
+}
