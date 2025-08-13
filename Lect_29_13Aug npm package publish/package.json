@@ -1,0 +1,15 @@
+{
+  "name": "my_custom_calculator",
+  "version": "1.0.2",
+  "main": "index.js",
+  "types": "modules",
+  "scripts": {
+    "start": "node index"
+  },
+  "author": "shavez",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "my_custom_calculator": "^1.0.1"
+  }
+}
