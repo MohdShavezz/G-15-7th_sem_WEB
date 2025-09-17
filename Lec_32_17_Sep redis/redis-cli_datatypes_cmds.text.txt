@@ -1,0 +1,58 @@
+installation:
+1.
+google : install redis for windows git
+got to link , download msi file, exec it normally next next
+program files>redis> click redis-cli
+127.0.0.1:6379> ping
+OR
+2.with DOCKER
+docker run -d --name redis-stack -p 6379:6379 -p 8001:8001 redis/redis-stack
+docker exec -it cont_id
+redis-cli  // PING
+
+other cmds below:
+docker images
+docker ps -a
+docker start|stop cont_id
+
+
+search redis data types (docs)
+
+KEYS *
+DEL key/keys
+FLUSHDB (all del)
+
+#STRING
+SET bike:1 Deimos
+GET bike:1 //Deimos
+SET bike:1 hero nx/xx  nx:if key not exist then SETs else (nil),xx: if key exist only then SETs else (nil)
+SETEX username 10 john
+GET username // (nil) if after 10sec
+MSET bike:1 "Deimos" bike:2 "Ares" bike:3 "Vanth"
+MGET bike:1 bike:2 bike:3
+SET count 0
+INCR count //1
+INCRBY count 5  //6
+INCRBYFLOAT count 1.223  //7.233333333333
+
+#HASHES (objs)
+HSET user:1 name shavez emial email@mgali.com age 22
+HGET user:1 name
+HMGET user:1 name email age
+HINCRBY user:1 age -1 (inc/dec)
+HGETALL user:1
+HEXISTS user:1 name
+
+#LIST (array)
+LPUSH/RPUSH list element
+LPOP/RPOP list
+LTRIM list 0 2 (remove element, 0 1 2 remains)
+LRANGE list 0 -1 (return all list data)
+LLEN list (return size of list)
+
+#SET
+SADD set1 1 2 2 a  (1 2 a stored)
+SREM set1 1 2
+SMEMBERS set1 (returns all data)
+SCARD set1 (set size)
+SINTER set1 set2 (common ele get)
